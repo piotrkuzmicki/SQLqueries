@@ -1,0 +1,21 @@
+declare @tab table
+(
+dbname nvarchar(100),
+account_name nvarchar(1000)
+)
+
+
+declare @com nvarchar(1000)
+set @com = 
+'
+use [?]
+if exists (select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = ''employee'')
+begin
+ select db_name(), usr_id FROM employee where usr_id like ''%john%''
+ end
+'
+
+insert into @tab exec sp_msforeachdb @com
+
+select * from @tab
+order by account_name
